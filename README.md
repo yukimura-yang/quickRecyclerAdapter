@@ -1,4 +1,4 @@
-![version](https://img.shields.io/badge/Release-Ver1.0.1-blue.svg)  
+![version](https://img.shields.io/github/v/release/yukimura-yang/quickRecyclerAdapter.svg)  
 build.gradle中引用
 ```
 implementation 'moe.gkd:quickRecyclerAdapter:latest'
