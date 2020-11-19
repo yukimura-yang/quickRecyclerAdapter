@@ -11,15 +11,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     val data = ArrayList<String>().apply {
         for (i in 0 until 10) {
-//            add("$i")
+            add("$i")
         }
     }
     val adapter =
-        object : BaseQuickRecyclerAdapter<ItemViewBinding, EmptyViewBinding, String>(data) {
-            override fun onBindEmptyViewHolder(holder: BaseViewHolder<EmptyViewBinding>) {
-
-            }
-
+        object : BaseNoEmptyQuickRecyclerAdapter<ItemViewBinding, String>(data) {
             override fun onBindNormalViewHolder(
                 holder: BaseViewHolder<ItemViewBinding>,
                 item: String,
@@ -27,7 +23,6 @@ class MainActivity : AppCompatActivity() {
             ) {
                 holder.binding.text.text = item
             }
-
 
         }
 

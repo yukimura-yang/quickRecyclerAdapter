@@ -2,11 +2,11 @@ package moe.gkd.quickrecycleradapter
 
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseNoEmptyQuickRecyclerAdapter<VH : ViewBinding, T>(data: MutableList<T>) :
-    BaseQuickRecyclerAdapter<VH, VH, T>(
+abstract class BaseNoEmptyQuickRecyclerAdapter<N : ViewBinding, T>(data: MutableList<T>) :
+    BaseQuickRecyclerAdapter<N, N, T>(
         data
     ) {
-    override fun onBindEmptyViewHolder(holder: BaseViewHolder<VH>) {
+    override fun onBindEmptyViewHolder(holder: BaseViewHolder<N>) {
 
     }
 

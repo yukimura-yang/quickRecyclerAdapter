@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseQuickRecyclerAdapter<VH : ViewBinding, EVH : ViewBinding, T>(protected val data: MutableList<T>) :
+abstract class BaseQuickRecyclerAdapter<N : ViewBinding, E : ViewBinding, T>(protected val data: MutableList<T>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     protected val EMPTY = 0
     protected val NORMAL = 1
@@ -42,39 +42,39 @@ abstract class BaseQuickRecyclerAdapter<VH : ViewBinding, EVH : ViewBinding, T>(
     protected fun onCreateEmptyViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup
-    ): BaseViewHolder<EVH> {
+    ): BaseViewHolder<E> {
         val type = javaClass.genericSuperclass as ParameterizedType
-        val clazz = type.actualTypeArguments[1] as Class<T>
+        val clazz = type.actualTypeArguments[1] as Class<E>
         val method = clazz.getMethod(
             "inflate",
             LayoutInflater::class.java,
             ViewGroup::class.java,
             Boolean::class.java
         )
-        val binding: EVH = method.invoke(null, inflater, parent, false) as EVH
+        val binding: E = method.invoke(null, inflater, parent, false) as E
         return BaseViewHolder(binding)
     }
 
     protected fun onCreateNormalViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup
-    ): BaseViewHolder<VH> {
+    ): BaseViewHolder<N> {
         val type = javaClass.genericSuperclass as ParameterizedType
-        val clazz = type.actualTypeArguments[0] as Class<T>
+        val clazz = type.actualTypeArguments[0] as Class<N>
         val method = clazz.getMethod(
             "inflate",
             LayoutInflater::class.java,
             ViewGroup::class.java,
             Boolean::class.java
         )
-        val binding: VH = method.invoke(null, inflater, parent, false) as VH
+        val binding: N = method.invoke(null, inflater, parent, false) as N
         return BaseViewHolder(binding)
     }
 
-    protected abstract fun onBindEmptyViewHolder(holder: BaseViewHolder<EVH>)
+    protected abstract fun onBindEmptyViewHolder(holder: BaseViewHolder<E>)
 
     protected abstract fun onBindNormalViewHolder(
-        holder: BaseViewHolder<VH>,
+        holder: BaseViewHolder<N>,
         item: T,
         position: Int
     )
@@ -82,9 +82,9 @@ abstract class BaseQuickRecyclerAdapter<VH : ViewBinding, EVH : ViewBinding, T>(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == NORMAL) {
-            return onBindNormalViewHolder(holder as BaseViewHolder<VH>, data[position], position)
+            return onBindNormalViewHolder(holder as BaseViewHolder<N>, data[position], position)
         } else {
-            return onBindEmptyViewHolder(holder as BaseViewHolder<EVH>)
+            return onBindEmptyViewHolder(holder as BaseViewHolder<E>)
         }
     }
 }
