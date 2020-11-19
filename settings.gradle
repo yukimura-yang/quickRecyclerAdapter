@@ -1,0 +1,3 @@
+include ':quickrecycleradapter'
+include ':app'
+rootProject.name = "quickRecyclerAdapter"
