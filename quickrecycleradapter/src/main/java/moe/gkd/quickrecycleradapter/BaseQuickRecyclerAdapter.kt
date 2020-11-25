@@ -11,6 +11,35 @@ abstract class BaseQuickRecyclerAdapter<N : ViewBinding, E : ViewBinding, T>(pro
     protected val EMPTY = 0
     protected val NORMAL = 1
 
+    /**
+     * 多级继承修改了泛型数量或顺序需要重写
+     */
+    protected open fun getNBindding(inflater: LayoutInflater, parent: ViewGroup): N {
+        val type = this.javaClass.genericSuperclass as ParameterizedType
+        val clazz = type.actualTypeArguments[0] as Class<N>
+        val method = clazz.getMethod(
+            "inflate",
+            LayoutInflater::class.java,
+            ViewGroup::class.java,
+            Boolean::class.java
+        )
+        return method.invoke(null, inflater, parent, false) as N
+    }
+
+    /**
+     * 多级继承修改了泛型数量或顺序需要重写
+     */
+    protected open fun getEBinding(inflater: LayoutInflater, parent: ViewGroup): E {
+        val type = this.javaClass.genericSuperclass as ParameterizedType
+        val clazz = type.actualTypeArguments[1] as Class<E>
+        val method = clazz.getMethod(
+            "inflate",
+            LayoutInflater::class.java,
+            ViewGroup::class.java,
+            Boolean::class.java
+        )
+        return method.invoke(null, inflater, parent, false) as E
+    }
 
     /**
      * 如果data为空就显示空页面
@@ -39,46 +68,19 @@ abstract class BaseQuickRecyclerAdapter<N : ViewBinding, E : ViewBinding, T>(pro
         }
     }
 
-    /**
-     * 获取最接近的子类的class
-     */
-    private fun getThisClazz(): Class<in BaseQuickRecyclerAdapter<*, *, *>> {
-        var clazz: Class<*> = javaClass
-        while (clazz.superclass?.simpleName != "BaseQuickRecyclerAdapter") {
-            clazz = clazz.superclass as Class<*>
-        }
-        return clazz as Class<in BaseQuickRecyclerAdapter<*, *, *>>
-    }
-
-    protected fun onCreateEmptyViewHolder(
+    private fun onCreateEmptyViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup
     ): BaseViewHolder<E> {
-        val type = getThisClazz().genericSuperclass as ParameterizedType
-        val clazz = type.actualTypeArguments[1] as Class<E>
-        val method = clazz.getMethod(
-            "inflate",
-            LayoutInflater::class.java,
-            ViewGroup::class.java,
-            Boolean::class.java
-        )
-        val binding: E = method.invoke(null, inflater, parent, false) as E
+        val binding: E = getEBinding(inflater, parent)
         return BaseViewHolder(binding)
     }
 
-    protected fun onCreateNormalViewHolder(
+    private final fun onCreateNormalViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup
     ): BaseViewHolder<N> {
-        val type = getThisClazz().genericSuperclass as ParameterizedType
-        val clazz = type.actualTypeArguments[0] as Class<N>
-        val method = clazz.getMethod(
-            "inflate",
-            LayoutInflater::class.java,
-            ViewGroup::class.java,
-            Boolean::class.java
-        )
-        val binding: N = method.invoke(null, inflater, parent, false) as N
+        val binding: N = getNBindding(inflater, parent)
         return BaseViewHolder(binding)
     }
 

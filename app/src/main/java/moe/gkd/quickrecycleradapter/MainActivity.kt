@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
             ) {
                 holder.binding.text.text = item
             }
-
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
