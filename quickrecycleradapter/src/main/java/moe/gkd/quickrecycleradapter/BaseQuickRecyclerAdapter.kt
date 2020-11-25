@@ -39,11 +39,22 @@ abstract class BaseQuickRecyclerAdapter<N : ViewBinding, E : ViewBinding, T>(pro
         }
     }
 
+    /**
+     * 获取最接近的子类的class
+     */
+    private fun getThisClazz(): Class<in BaseQuickRecyclerAdapter<*, *, *>> {
+        var clazz: Class<*> = javaClass
+        while (clazz.superclass?.simpleName != "BaseQuickRecyclerAdapter") {
+            clazz = clazz.superclass as Class<*>
+        }
+        return clazz as Class<in BaseQuickRecyclerAdapter<*, *, *>>
+    }
+
     protected fun onCreateEmptyViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup
     ): BaseViewHolder<E> {
-        val type = javaClass.genericSuperclass as ParameterizedType
+        val type = getThisClazz().genericSuperclass as ParameterizedType
         val clazz = type.actualTypeArguments[1] as Class<E>
         val method = clazz.getMethod(
             "inflate",
@@ -59,7 +70,7 @@ abstract class BaseQuickRecyclerAdapter<N : ViewBinding, E : ViewBinding, T>(pro
         inflater: LayoutInflater,
         parent: ViewGroup
     ): BaseViewHolder<N> {
-        val type = javaClass.genericSuperclass as ParameterizedType
+        val type = getThisClazz().genericSuperclass as ParameterizedType
         val clazz = type.actualTypeArguments[0] as Class<N>
         val method = clazz.getMethod(
             "inflate",
