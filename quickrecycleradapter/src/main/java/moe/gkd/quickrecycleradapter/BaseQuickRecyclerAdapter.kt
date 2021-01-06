@@ -76,7 +76,7 @@ abstract class BaseQuickRecyclerAdapter<N : ViewBinding, E : ViewBinding, T>(pro
         return BaseViewHolder(binding)
     }
 
-    private final fun onCreateNormalViewHolder(
+    private fun onCreateNormalViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup
     ): BaseViewHolder<N> {
